@@ -28,9 +28,4 @@ export class AuthController {
   register(@Body() data: RegisterDto) {
     return this.authService.register(data);
   }
-
-  @Post('private-register-support')
-  privateRegisterSupport(@Body() data: RegisterDto) {
-    return this.authService.privateRegisterSupport(data);
-  }
 }

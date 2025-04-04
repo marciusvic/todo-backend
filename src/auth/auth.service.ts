@@ -1,39 +1,24 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { UsersService } from 'src/users/users.service';
 import * as bcrypt from 'bcrypt';
-import { Users } from '@prisma/client';
-import { RolesAvailable } from 'lib/enums/roles.enum';
+import { Role, User } from '@prisma/client';
+import { UserService } from 'src/user/user.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly jwtService: JwtService,
-    private readonly usersService: UsersService,
+    private readonly usersService: UserService,
   ) {}
+
   async validateUser(email: string, pass: string) {
     const user = await this.usersService.findOne(
       { email },
       {
         password: true,
         email: true,
-        createdAt: true,
-        updatedAt: true,
         name: true,
         id: true,
-        userRoles: {
-          include: {
-            role: {
-              include: {
-                rolesPermissions: {
-                  include: {
-                    permission: true,
-                  },
-                },
-              },
-            },
-          },
-        },
       },
     );
 
@@ -51,7 +36,7 @@ export class AuthService {
     return result;
   }
 
-  login(user: Users) {
+  login(user: User) {
     const payload = { username: user.name, sub: user.id };
     return {
       access_token: this.jwtService.sign(payload),
@@ -69,36 +54,12 @@ export class AuthService {
         message: 'bad request',
       });
     }
-    const createdUser = await this.usersService.create({ ...data });
-    const { password: _, ...result } = createdUser;
-    return result;
-  }
-
-  async privateRegisterSupport(data: {
-    email: string;
-    password: string;
-    name?: string;
-  }) {
-    const userWithEmail = await this.usersService.findOne({
-      email: data.email,
-    });
-    if (userWithEmail) {
-      throw new BadRequestException({
-        toast: 'Erro ao criar usuário. Tente com outro email',
-        message: 'bad request',
-      });
-    }
+    const hashedPassword = await bcrypt.hash(data.password, 10);
     const createdUser = await this.usersService.create({
-      ...data,
-      userRoles: {
-        create: {
-          role: {
-            connect: {
-              name: RolesAvailable['support-manager'],
-            },
-          },
-        },
-      },
+      email: data.email,
+      password: hashedPassword,
+      name: data.name || 'sem nome',
+      role: Role.USER,
     });
     const { password: _, ...result } = createdUser;
     return result;
