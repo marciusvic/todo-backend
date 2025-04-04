@@ -1,9 +1,12 @@
 import { Module } from '@nestjs/common';
 import { TaskService } from './task.service';
 import { TaskController } from './task.controller';
+import { TaskRepository } from './task.repository';
+import { PrismaModule } from 'nestjs-prisma';
 
 @Module({
+  imports: [PrismaModule],
   controllers: [TaskController],
-  providers: [TaskService],
+  providers: [TaskService, TaskRepository],
 })
 export class TaskModule {}

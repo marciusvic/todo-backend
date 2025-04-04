@@ -5,6 +5,8 @@ import { UserService } from 'src/user/user.service';
 import { UserRepository } from 'src/user/user.repository';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
+import { UserModule } from 'src/user/user.module';
+import { PrismaModule } from 'nestjs-prisma';
 
 @Module({
   imports: [
@@ -13,6 +15,8 @@ import { PassportModule } from '@nestjs/passport';
       secret: process.env.JWT_SECRET,
       signOptions: { expiresIn: process.env.JWT_EXPIRES_IN },
     }),
+    UserModule,
+    PrismaModule,
   ],
   controllers: [AuthController],
   providers: [AuthService, UserService, UserRepository],
