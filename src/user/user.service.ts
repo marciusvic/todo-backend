@@ -12,7 +12,7 @@ export class UserService {
     return this.usersRepository.create(createUserDto);
   }
 
-  async findAll(params?: { where?: Prisma.UserWhereInput }) {
+  async findAll(params: { where?: Prisma.UserWhereInput } = {}) {
     return this.usersRepository.findMany(params);
   }
 

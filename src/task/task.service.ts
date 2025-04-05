@@ -12,7 +12,7 @@ export class TaskService {
     return this.taskRepository.create(createTaskDto);
   }
 
-  async findAll(params?: { where?: Prisma.TaskWhereInput }) {
+  async findAll(params: { where?: Prisma.TaskWhereInput } = {}) {
     return this.taskRepository.findMany(params);
   }
 
