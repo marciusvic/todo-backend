@@ -11,6 +11,8 @@
     "start:dev": "nest start --watch",
     "prisma:generate": "npx prisma generate",
     "prisma:db:push": "npx prisma db push",
+    "prisma:migrate:dev": "npx prisma migrate dev --name init",
+    "prisma:migrate:deploy": "npx prisma migrate deploy",
     "prisma:seed:prod": "ts-node ./src/seed.ts"
   },
   "dependencies": {

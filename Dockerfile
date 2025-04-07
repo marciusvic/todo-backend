@@ -7,8 +7,9 @@ RUN npm install
 
 COPY . .
 
-RUN npm run prisma:generatenpx prisma migrate deploy
+RUN npm run prisma:generate
 RUN npm run build
+RUN npm run prisma:migrate:deploy
 
 EXPOSE 3000
 
