@@ -1,13 +1,32 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'nestjs-prisma';
 import { Prisma } from '@prisma/client';
+import { CreateTaskDto } from './dto/create-task.dto';
 
 @Injectable()
 export class TaskRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  async create(data: Prisma.TaskCreateInput) {
-    return this.prisma.task.create({ data });
+  async create({
+    title,
+    description,
+    dueDate,
+    priority,
+    userId,
+  }: CreateTaskDto & { userId: number }) {
+    if (!title || !description || !dueDate || !priority) {
+      throw new Error('Missing required fields');
+    }
+
+    return this.prisma.task.create({
+      data: {
+        title,
+        description,
+        dueDate,
+        priority,
+        userId,
+      },
+    });
   }
 
   async findMany(params: { where?: Prisma.TaskWhereInput }) {
@@ -15,13 +34,11 @@ export class TaskRepository {
     return this.prisma.task.findMany({ where });
   }
 
-  async findOne(
-    TaskUniqueInput: Prisma.TaskWhereUniqueInput,
-    select?: Prisma.TaskSelect,
-  ) {
-    return this.prisma.task.findUnique({
-      where: TaskUniqueInput,
-      select,
+  async findOne(id: number) {
+    return this.prisma.task.findFirst({
+      where: {
+        id,
+      },
     });
   }
 

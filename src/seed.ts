@@ -1,21 +1,24 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, Role } from '@prisma/client';
+import * as bcrypt from 'bcryptjs';
 
 const prisma = new PrismaClient();
 
 async function main() {
   console.log('Seeding database...');
 
-  const existingUser = await prisma.user.findUnique({
-    where: { email: 'admin@olhar180.com' },
+  const adminEmail = 'admin@olhar180.com';
+  const existingAdmin = await prisma.user.findUnique({
+    where: { email: adminEmail },
   });
 
-  if (!existingUser) {
+  if (!existingAdmin) {
+    const hashedPassword = await bcrypt.hash('admin123', 10);
     await prisma.user.create({
       data: {
-        email: 'admin@olhar180.com',
-        password: 'admin123',
+        email: adminEmail,
+        password: hashedPassword,
         name: 'Olhar180 Admin',
-        role: 'ADMIN',
+        role: Role.ADMIN,
       },
     });
     console.log('Admin user created.');
@@ -23,6 +26,24 @@ async function main() {
     console.log('Admin user already exists. Skipping creation.');
   }
 
+  const userEmail = 'user@olhar180.com';
+  const existingUser = await prisma.user.findUnique({
+    where: { email: userEmail },
+  });
+  if (!existingUser) {
+    const hashedPassword = await bcrypt.hash('user123', 10);
+    await prisma.user.create({
+      data: {
+        email: userEmail,
+        password: hashedPassword,
+        name: 'Olhar180 User',
+        role: Role.USER,
+      },
+    });
+    console.log('Regular user created.');
+  } else {
+    console.log('Regular user already exists. Skipping creation.');
+  }
   console.log('Seeding completed.');
 }
 
