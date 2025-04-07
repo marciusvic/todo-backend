@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Get,
   Injectable,
   Post,
   Request,
@@ -27,5 +28,10 @@ export class AuthController {
   @Post('register')
   register(@Body() data: RegisterDto) {
     return this.authService.register(data);
+  }
+  @Public()
+  @Get('ping')
+  getPing() {
+    return { message: 'pong' };
   }
 }
