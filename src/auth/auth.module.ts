@@ -15,7 +15,7 @@ import { JwtStrategy } from './strategies/jwt.strategy';
     PassportModule,
     JwtModule.register({
       secret: 'olhar180',
-      signOptions: { expiresIn: '8h' },
+      signOptions: { expiresIn: process.env.JWT_EXPIRES_IN },
     }),
     UserModule,
     PrismaModule,
