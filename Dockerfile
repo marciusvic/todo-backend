@@ -9,8 +9,7 @@ COPY . .
 
 RUN npm run prisma:generate
 RUN npm run build
-RUN npm run prisma:migrate:deploy
 
 EXPOSE 3000
 
-CMD ["node", "dist/src/main"]
+CMD ["sh", "-c", "npx prisma migrate deploy && node dist/src/main"]
