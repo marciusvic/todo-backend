@@ -32,7 +32,7 @@ export class TaskService {
     if (!task) {
       throw new Error('Task not found');
     }
-    if (task.userId !== user.id) {
+    if (task.userId !== user.id && user.role !== 'ADMIN') {
       throw new Error('You do not have permission to update this task');
     }
     return this.taskRepository.update({
@@ -46,7 +46,7 @@ export class TaskService {
     if (!task) {
       throw new Error('Task not found');
     }
-    if (task.userId !== user.id) {
+    if (task.userId !== user.id && user.role !== 'ADMIN') {
       throw new Error('You do not have permission to delete this task');
     }
     return this.taskRepository.delete({
