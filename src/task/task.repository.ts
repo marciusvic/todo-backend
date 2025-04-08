@@ -34,6 +34,16 @@ export class TaskRepository {
     return this.prisma.task.findMany({ where });
   }
 
+  async findAdminMany(params: { where?: Prisma.TaskWhereInput }) {
+    const { where } = params;
+    return this.prisma.task.findMany({
+      where,
+      include: {
+        User: true,
+      },
+    });
+  }
+
   async findOne(id: number) {
     return this.prisma.task.findFirst({
       where: {

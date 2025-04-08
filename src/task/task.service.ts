@@ -16,6 +16,10 @@ export class TaskService {
     return this.taskRepository.findMany({ where });
   }
 
+  async findAllForAdmin(where = {}) {
+    return this.taskRepository.findAdminMany({ where });
+  }
+
   async findOne(id: number, userId: number) {
     const task = await this.taskRepository.findOne(id);
     if (!task) {

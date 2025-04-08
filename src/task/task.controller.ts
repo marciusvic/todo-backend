@@ -38,7 +38,7 @@ export class TaskController {
   @UseGuards(RolesGuard)
   @Roles(Role.ADMIN)
   findAllForAdmin() {
-    return this.taskService.findAll();
+    return this.taskService.findAllForAdmin();
   }
 
   @Get(':id')
